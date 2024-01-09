@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+  redis:
+    container_name: redis
+    image: redis:7.2.3-alpine
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_DOWNLOAD_URL: http://download.redis.io/releases/redis-7.2.3.tar.gz
+      REDIS_DOWNLOAD_SHA: 62c97f250e61ea79bb3f8bf9a3e40b7b2144f8d8f5d7bd19547923055914aa79
+      REDIS_VERSION: 7.2.3
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
