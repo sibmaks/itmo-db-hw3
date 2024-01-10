@@ -209,7 +209,7 @@ kafka.producer.security.protocol=PLAINTEXT
 kafka.producer.enable.idempotence=true
 ```
 
-# Задание 4
+# Задание 4 и 5
 
 Код решения в `com.github.sibmaks.itmodb.hw3.listener.kafka.TripListener.onEvent`
 
