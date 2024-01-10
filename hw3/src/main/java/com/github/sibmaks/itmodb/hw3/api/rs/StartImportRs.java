@@ -1,4 +1,4 @@
-package com.github.sibmaks.itmodb.hw3.api.rq;
+package com.github.sibmaks.itmodb.hw3.api.rs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

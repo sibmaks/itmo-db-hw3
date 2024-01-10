@@ -1,9 +1,9 @@
 package com.github.sibmaks.itmodb.hw3.controller;
 
 import com.github.sibmaks.itmodb.hw3.api.rq.ImportStateRq;
-import com.github.sibmaks.itmodb.hw3.api.rq.ImportStateRs;
+import com.github.sibmaks.itmodb.hw3.api.rs.ImportStateRs;
 import com.github.sibmaks.itmodb.hw3.api.rq.StartImportRq;
-import com.github.sibmaks.itmodb.hw3.api.rq.StartImportRs;
+import com.github.sibmaks.itmodb.hw3.api.rs.StartImportRs;
 import com.github.sibmaks.itmodb.hw3.service.DataImportService;
 import com.github.sibmaks.itmodb.hw3.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;

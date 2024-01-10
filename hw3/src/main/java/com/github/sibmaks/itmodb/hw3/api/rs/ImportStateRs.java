@@ -1,4 +1,4 @@
-package com.github.sibmaks.itmodb.hw3.api.rq;
+package com.github.sibmaks.itmodb.hw3.api.rs;
 
 import com.github.sibmaks.itmodb.hw3.dto.DataImportStatus;
 import lombok.*;
