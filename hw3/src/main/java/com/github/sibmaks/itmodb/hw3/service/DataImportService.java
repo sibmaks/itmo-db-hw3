@@ -11,10 +11,18 @@ public interface DataImportService {
 
     /**
      * Запустить импорт ресурса
+     *
      * @param resource ресурс с данными
      * @return идентификатор процесса импорта
      */
     DataImportTaskState importResource(Resource resource);
 
 
+    /**
+     * Получить состояние задачи на импорт
+     *
+     * @param taskId идентификатор задачи
+     * @return состояние задачи
+     */
+    DataImportTaskState getTaskState(String taskId);
 }

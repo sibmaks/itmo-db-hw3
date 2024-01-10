@@ -33,12 +33,25 @@ app.storage.root-path=/path-with-files/
 
 ## Запустить импорт
 
-Посредством http команды:
+Посредством http запроса:
 
 ```shell
 curl --location 'http://localhost:8080/import-controller/start' \
 --header 'Content-Type: application/json' \
 --data '{
 "path": "2018_Yellow_Taxi_Trip_Data_20231108.csv"
+}'
+```
+
+## Получение статуса импорта
+
+
+Посредством http запроса:
+
+```shell
+curl --location 'http://localhost:8080/import-controller/state' \
+--header 'Content-Type: application/json' \
+--data '{
+    "taskId": "f993940e-3bcc-46a1-9759-e4d4b05d8982"
 }'
 ```

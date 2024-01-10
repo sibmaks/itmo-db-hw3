@@ -1,5 +1,6 @@
 package com.github.sibmaks.itmodb.hw3.service;
 
+import com.github.sibmaks.itmodb.hw3.dto.DataImportStatus;
 import com.github.sibmaks.itmodb.hw3.dto.DataImportTaskState;
 import com.github.sibmaks.itmodb.hw3.entity.Trip;
 import com.opencsv.CSVReader;
@@ -52,11 +53,18 @@ public class DataImportServiceImpl implements DataImportService {
         var taskId = UUID.randomUUID().toString();
         var dataImportTaskState = new DataImportTaskState(taskId);
         taskStates.put(taskId, dataImportTaskState);
+        dataImportTaskState.setStatus(DataImportStatus.IN_QUEUE);
         importExecutor.execute(() -> processImport(resource, dataImportTaskState));
         return dataImportTaskState;
     }
 
+    @Override
+    public DataImportTaskState getTaskState(String taskId) {
+        return taskStates.get(taskId);
+    }
+
     private void processImport(Resource resource, DataImportTaskState dataImportTaskState) {
+        dataImportTaskState.setStatus(DataImportStatus.IN_PROCESS);
         var taskId = dataImportTaskState.getTaskId();
         try (var inputStream = resource.getInputStream();
              var inputStreamReader = new InputStreamReader(inputStream);

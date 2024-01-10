@@ -5,6 +5,7 @@ package com.github.sibmaks.itmodb.hw3.dto;
  * @since 0.0.1
  */
 public enum DataImportStatus {
+    CREATED,
     IN_QUEUE,
     IN_PROCESS,
     FINISHED

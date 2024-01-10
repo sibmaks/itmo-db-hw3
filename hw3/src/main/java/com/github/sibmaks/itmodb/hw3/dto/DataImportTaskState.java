@@ -1,6 +1,7 @@
 package com.github.sibmaks.itmodb.hw3.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,11 +17,15 @@ public class DataImportTaskState {
     @Getter
     private final long startTime;
     @Getter
-    private long finishTime;
+    @Setter
+    private DataImportStatus status;
+    @Getter
+    private Long finishTime;
 
 
     public DataImportTaskState(String taskId) {
         this.taskId = taskId;
+        this.status = DataImportStatus.CREATED;
         this.successProcessedRowsCount = new AtomicInteger();
         this.failedProcessedRowsCount = new AtomicInteger();
         this.startTime = System.currentTimeMillis();
@@ -43,9 +48,10 @@ public class DataImportTaskState {
     }
 
     public void finish() {
-        if (finishTime != 0) {
+        if (finishTime != null) {
             throw new IllegalStateException("Task %s already finished".formatted(taskId));
         }
         finishTime = System.currentTimeMillis();
+        status = DataImportStatus.FINISHED;
     }
 }

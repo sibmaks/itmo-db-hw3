@@ -1,5 +1,7 @@
 package com.github.sibmaks.itmodb.hw3.controller;
 
+import com.github.sibmaks.itmodb.hw3.api.rq.ImportStateRq;
+import com.github.sibmaks.itmodb.hw3.api.rq.ImportStateRs;
 import com.github.sibmaks.itmodb.hw3.api.rq.StartImportRq;
 import com.github.sibmaks.itmodb.hw3.api.rq.StartImportRs;
 import com.github.sibmaks.itmodb.hw3.service.DataImportService;
@@ -28,6 +30,22 @@ public class ImportController {
         var resource = storageService.load(rq.getPath());
         var importTask = dataImportService.importResource(resource);
         return new StartImportRs(importTask.getTaskId());
+    }
+
+    @PostMapping("/state")
+    public ImportStateRs state(@RequestBody ImportStateRq rq) {
+        var taskState = dataImportService.getTaskState(rq.getTaskId());
+        if(taskState == null) {
+            throw new IllegalArgumentException("Процесс '%s' не известен".formatted(rq.getTaskId()));
+        }
+        return ImportStateRs.builder()
+                .taskId(rq.getTaskId())
+                .successProcessedRowsCount(taskState.getSuccessProcessedRowsCount())
+                .failedProcessedRowsCount(taskState.getFailedProcessedRowsCount())
+                .status(taskState.getStatus())
+                .startTime(taskState.getStartTime())
+                .finishTime(taskState.getFinishTime())
+                .build();
     }
 
 }
