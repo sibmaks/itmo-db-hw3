@@ -7,6 +7,8 @@ services:
       - "9092:9092"
     volumes:
       - "/Users/sibmaks/repos/itmo/db/hw3/kafka_data:/bitnami"
+    networks:
+      - kafka_network
     environment:
       # KRaft settings
       - KAFKA_CFG_NODE_ID=0
@@ -21,3 +23,7 @@ services:
 volumes:
   kafka_data:
     driver: local
+
+networks:
+  kafka_network:
+    driver: bridge
