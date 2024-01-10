@@ -208,3 +208,33 @@ kafka.producer.security.protocol=PLAINTEXT
 # используем встроенную идемпотентность для kafka-producer-а
 kafka.producer.enable.idempotence=true
 ```
+
+# Задание 4
+
+Код решения в `com.github.sibmaks.itmodb.hw3.listener.kafka.TripListener.onEvent`
+
+Конфигурация подключения к Redis
+
+```properties
+spring.data.redis.client-name=sibmaks-local
+spring.data.redis.client-type=lettuce
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+```
+
+Конфигурация подключения к Kafka в качестве consumer-а
+```properties
+# Читаем только записанное
+spring.kafka.consumer.isolation-level=read_committed
+
+# Всегда читаем с самого 1-ого не прочитанного сообщения
+spring.kafka.consumer.auto-offset-reset=earliest
+
+# Авто-коммит не нужен, будем делать acknowledgment руками
+spring.kafka.consumer.enable-auto-commit=false
+spring.kafka.listener.ack-mode=manual
+
+# Ключ-значение строки, как и в producer-е
+spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+```
