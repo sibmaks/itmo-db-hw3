@@ -1,5 +1,7 @@
 # Задание 1
 
+Код решения: `com.github.sibmaks.itmodb.hw3.service.DataImportServiceImpl.processImport`
+
 Для проверки выполнения задания необходимо
 
 ## Настройка подключения к MongoDB
@@ -57,6 +59,8 @@ curl --location 'http://localhost:8080/import-controller/state' \
 ```
 
 # Задание 2
+
+Код решения: `com.github.sibmaks.itmodb.hw3.controller.EventCreatorController.create`
 
 Для запуска создания событий поездок можно выполнить запрос
 
@@ -159,3 +163,48 @@ curl --location 'http://localhost:8080/event-controller/create' \
 ```
 
 И будет создана коллекция: `trip_events`.
+
+# Задание 3
+
+Код отправки в топик: `com.github.sibmaks.itmodb.hw3.controller.EventSenderController.send`
+
+Создадим топик: `taxi_trip` со следующей конфигурацией
+
+```properties
+# Храним данные минимум неделю
+retention.ms=7 days
+# Чистка каждый день
+delete.retention.ms=1 day
+# Старые данные удаляем
+cleanup.policy=delete
+# Ограничиваем размер сообщений в 4 МБ
+max.message.bytes=4MiB
+```
+
+Фактор репликации 1, так как работаем локально.
+
+Количество партиций: 4, взято наугад, для более точной настройки желательно понимать контекст использования,
+
+В целом 4 одновременных читателя кажется для не большого потока данных достаточным.
+
+В качестве ключа будет использовать `tripId`, так как он является `UUID`-ом получим относительно равномерное распределение по партициям.
+
+Конфигурация `producer-а`:
+```properties
+# ожидаем ответа от всех нод
+kafka.producer.acks=all
+# в случае ошибки выполняем 3 попытки
+kafka.producer.retries=3
+# задержка между повторами
+kafka.producer.retry.backoff.ms=1000
+
+# ключ и значение отправляем в виде строки
+kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+kafka.producer.value-serializer=org.apache.kafka.common.serialization.StringSerializer
+
+# шифрование не используем
+kafka.producer.security.protocol=PLAINTEXT
+
+# используем встроенную идемпотентность для kafka-producer-а
+kafka.producer.enable.idempotence=true
+```
