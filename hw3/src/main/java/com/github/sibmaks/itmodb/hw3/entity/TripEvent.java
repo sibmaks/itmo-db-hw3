@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 public class TripEvent {
     @Id
     private String uuid;
+    private String tripId;
     private String eventType;
     private long eventTime;
 
