@@ -87,6 +87,7 @@ public class DataImportServiceImpl implements DataImportService {
 
                         var trip = Trip.builder()
                                 .uuid(UUID.randomUUID().toString())
+                                .tripId(UUID.randomUUID().toString())
                                 .vendorID(Integer.valueOf(line[0]))
                                 .tpepPickupDatetime(pickUp)
                                 .tpepPickupMillis(pickUp.toEpochSecond(ZoneOffset.UTC))

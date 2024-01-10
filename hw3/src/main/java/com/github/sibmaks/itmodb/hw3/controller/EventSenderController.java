@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 /**
  * @author sibmaks
@@ -44,11 +43,13 @@ public class EventSenderController {
                 .registerModules(new JavaTimeModule());
 
         for (var tripEvent : mongoTemplate.find(query, TripEvent.class)) {
-            var tripId = UUID.randomUUID().toString();
+            var tripId = tripEvent.getTripId();
+            var eventType = tripEvent.getEventType();
+            var eventId = eventType + ":" + tripId;
             var payload = objectMapper.writeValueAsString(tripEvent);
             var headers = new RecordHeaders();
-            headers.add("eventId", tripId.getBytes(StandardCharsets.UTF_8));
-            headers.add("eventType", tripEvent.getEventType().getBytes(StandardCharsets.UTF_8));
+            headers.add("eventId", eventId.getBytes(StandardCharsets.UTF_8));
+            headers.add("eventType", eventType.getBytes(StandardCharsets.UTF_8));
             headers.add("eventTime", Long.toString(tripEvent.getEventTime()).getBytes(StandardCharsets.UTF_8));
             var message = new ProducerRecord<>("taxi_trip", null, tripId, payload, headers);
             kafkaTemplate.send(message);

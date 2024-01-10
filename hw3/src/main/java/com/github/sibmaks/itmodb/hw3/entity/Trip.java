@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 public class Trip {
     @Id
     private String uuid;
+    private String tripId;
     private Integer vendorID;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime tpepPickupDatetime;
