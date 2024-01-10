@@ -62,7 +62,7 @@ public class TripListener {
             redisHashOperations.increment("ACTIVE_LOCAL_TRIPS", locationId, 1L);
         } else if ("end".equals(eventType)) {
             redisValueOperations.decrement("ACTIVE_TRIPS");
-            var locationId = eventBody.getDOLocationID().toString();
+            var locationId = eventBody.getPULocationID().toString();
             redisHashOperations.increment("ACTIVE_LOCAL_TRIPS", locationId, -1L);
         } else {
             log.warn("Не известный тип события: {}", eventType);
