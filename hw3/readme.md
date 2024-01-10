@@ -55,3 +55,107 @@ curl --location 'http://localhost:8080/import-controller/state' \
     "taskId": "f993940e-3bcc-46a1-9759-e4d4b05d8982"
 }'
 ```
+
+# Задание 2
+
+Для запуска создания событий поездок можно выполнить запрос
+
+
+```shell
+curl --location 'http://localhost:8080/event-controller/create' \
+--header 'Content-Type: application/json' \
+--data '{}'
+```
+
+К БД будет выполнен запрос:
+
+```json
+[
+  {
+    "$match": {
+      "$expr": {
+        "$gt": [
+          "$tpepDropOffMillis",
+          {
+            "$add": [
+              "$tpepPickupMillis",
+              60000
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$facet": {
+      "startTrips": [
+        {
+          "$project": {
+            "tripId": "$_id",
+            "eventType": {
+              "$literal": "start"
+            },
+            "eventTime": "$tpepPickupMillis",
+            "VendorID": 1,
+            "tpepPickupDatetime": 1,
+            "tpepPickupMillis": 1,
+            "PULocationID": 1,
+            "_id": 0
+          }
+        }
+      ],
+      "endTrips": [
+        {
+          "$project": {
+            "tripId": "$_id",
+            "eventType": {
+              "$literal": "end"
+            },
+            "eventTime": "$tpepDropOffMillis",
+            "tpepDropOffDatetime": 1,
+            "tpepDropOffMillis": 1,
+            "passengerCount": 1,
+            "tripDistance": 1,
+            "rateCodeID": 1,
+            "storeAndFwdFlag": 1,
+            "PULocationID": 1,
+            "DOLocationID": 1,
+            "paymentType": 1,
+            "fareAmount": 1,
+            "extra": 1,
+            "mtaTax": 1,
+            "tipAmount": 1,
+            "tollsAmount": 1,
+            "improvementSurcharge": 1,
+            "totalAmount": 1,
+            "_id": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "$project": {
+      "allEvents": {
+        "$concatArrays": [
+          "$startTrips",
+          "$endTrips"
+        ]
+      }
+    }
+  },
+  {
+    "$unwind": "$allEvents"
+  },
+  {
+    "$replaceRoot": {
+      "newRoot": "$allEvents"
+    }
+  },
+  {
+    "$out": "trip_events"
+  }
+]
+```
+
+И будет создана коллекция: `trip_events`.
